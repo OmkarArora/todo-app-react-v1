@@ -4,6 +4,8 @@
   align-items: center;
   /* justify-content: center;
   height: 100vh; */
+  max-width: 600px;
+  margin: auto;
 }
 
 .container-switch {
@@ -35,7 +37,7 @@
 .container-add-task {
   display: flex;
   justify-content: space-between;
-  width: 450px;
+  width: 100%;
   margin-top: 1rem;
 }
 

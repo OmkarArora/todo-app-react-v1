@@ -1,0 +1,23 @@
+.container-tasks {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.task {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.task:nth-child(1) {
+  margin-top: 0;
+}
+
+.task input[type="checkbox"] {
+  margin: 0 5px 0 0;
+}
+
+.striked {
+  text-decoration: line-through;
+}
