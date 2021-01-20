@@ -21,3 +21,32 @@
 .striked {
   text-decoration: line-through;
 }
+
+.task.completed {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.icon.trash {
+  color: var(--gray-one);
+  cursor: pointer;
+}
+
+.btn-deleteAll {
+  float: right;
+  margin-top: 2rem;
+  color: white;
+  background-color: #eb5757;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  font-family: inherit;
+}
+
+.btn-deleteAll .icon.trash {
+  color: white;
+  padding-right: 5px;
+}

@@ -1,20 +1,18 @@
 import { useState } from "react";
+import ActiveTasks from "../Tasks/ActiveTasks";
 import AllTasks from "../Tasks/AllTasks";
+import CompletedTasks from "../Tasks/CompletedTasks";
 import "./home.css";
 
-let initTasks = [
-  { taskID: "task0", value: "eat an apple", status: "active" },
-  { taskID: "task1", value: "eat an orange", status: "completed" },
-];
+let initTasks = [];
+if (localStorage.getItem("tasks")) {
+  initTasks = JSON.parse(localStorage.getItem("tasks"));
+}
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState("all");
   const [allTasks, setAllTasks] = useState(initTasks);
-  /* TODO: 1. Add Task feature
-    2. Active and Completed sections
-    3. Delete Task
-    4. Local Storage
-*/
+  const [inputValue, setInputValue] = useState("");
 
   const onTaskStatusChange = (id) => {
     // _alltasks= allTasks - doesn't work, this will be reference, you need a copy
@@ -29,9 +27,42 @@ const Home = () => {
     setAllTasks(_allTasks);
   };
 
+  let activeTasks = allTasks.filter((item) => item.status === "active");
+  let completedTasks = allTasks.filter((item) => item.status === "completed");
+
+  const deleteTask = (id) => {
+    let updateTasks = [];
+    for (let i = 0; i < allTasks.length; i++) {
+      if (allTasks[i].taskID !== id) {
+        updateTasks.push(allTasks[i]);
+      }
+    }
+    // update taskid
+    for (let i = 0; i < updateTasks.length; i++) {
+      updateTasks[i].taskID = `task${i}`;
+    }
+    setAllTasks(updateTasks);
+  };
+
+  const deleteAllCompleted = () => {
+    let updateTasks = [];
+    for (let i = 0; i < allTasks.length; i++) {
+      if (allTasks[i].status !== "completed") {
+        updateTasks.push(allTasks[i]);
+      }
+    }
+    // update taskid
+    for (let i = 0; i < updateTasks.length; i++) {
+      updateTasks[i].taskID = `task${i}`;
+    }
+    setAllTasks(updateTasks);
+  };
+
+  localStorage.setItem("tasks", JSON.stringify(allTasks));
+
   return (
     <div className="home">
-      <h2>#todo</h2>
+      <h2 className="heading">#todo</h2>
       <div className="container-switch">
         <button
           className={
@@ -58,15 +89,49 @@ const Home = () => {
           Completed
         </button>
       </div>
-      <div className="container-add-task">
-        <input type="text" placeholder="add details"></input>
-        <button className="btn-primary">Add</button>
-      </div>
-      {activeSection === "all" ? (
-        <AllTasks allTasks={allTasks} onTaskStatusChange={onTaskStatusChange} />
+      {activeSection !== "completed" ? (
+        <div className="container-add-task">
+          <input
+            type="text"
+            placeholder="add details"
+            value={inputValue}
+            onChange={(event) => setInputValue(event.target.value)}
+          ></input>
+          <button
+            className="btn-primary"
+            onClick={() => {
+              let _allTasks = [...allTasks];
+              _allTasks.push({
+                taskID: `task${_allTasks.length}`,
+                value: inputValue,
+                status: "active",
+              });
+              setAllTasks(_allTasks);
+              setInputValue("");
+            }}
+          >
+            Add
+          </button>
+        </div>
       ) : (
         <></>
       )}
+      <div className="section">
+        {activeSection === "all" ? (
+          <AllTasks
+            allTasks={allTasks}
+            onTaskStatusChange={onTaskStatusChange}
+          />
+        ) : activeSection === "active" ? (
+          <ActiveTasks tasks={activeTasks} />
+        ) : (
+          <CompletedTasks
+            tasks={completedTasks}
+            deleteTask={deleteTask}
+            deleteAllCompleted={deleteAllCompleted}
+          />
+        )}
+      </div>
     </div>
   );
 };
